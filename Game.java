@@ -38,7 +38,9 @@ public class Game {
             board.displayBoard(); // Display the current state of the board
             System.out.println();
             System.out.print(currentPlayer.getName() + "'s turn. Enter a position (1-9): ");
-            int position = scanner.nextInt();
+            // int position = scanner.nextInt();
+            int position = getValidInput(scanner);
+
 
             if (isValidMove(position)) {
                 // Mark the cell with the current player's symbol
@@ -73,10 +75,40 @@ public class Game {
         scanner.close();
     }
 
+    // private boolean isValidMove(int position) {
+    //     // Check if the specified position is a valid move (empty and within range)
+    //     return position >= 1 && position <= 9 && board.isCellEmpty(position);
+    // }
+
     private boolean isValidMove(int position) {
         // Check if the specified position is a valid move (empty and within range)
-        return position >= 1 && position <= 9 && board.isCellEmpty(position);
+        if (position < 1 || position > 9) {
+            System.out.println("Invalid move! Position must be between 1 and 9.");
+            return false;
+        }
+        if (!board.isCellEmpty(position)) {
+            System.out.println("Invalid move! Position is already taken. Try again.");
+            return false;
+        }
+        return true;
     }
+    
+    // Modified method to ensure the input is a valid integer
+    private int getValidInput(Scanner scanner) {
+        while (true) {
+            System.out.print("Enter a position (1-9): ");
+            if (scanner.hasNextInt()) {
+                int position = scanner.nextInt();
+                if (isValidMove(position)) {
+                    return position;
+                }
+            } else {
+                System.out.println("Invalid input! Please enter a number.");
+                scanner.next(); // Clear the scanner buffer
+            }
+        }
+    }
+    
 
     private boolean isBoardFull() {
         // Check if the board is full (all positions are occupied)
